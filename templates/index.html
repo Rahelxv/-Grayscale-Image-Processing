@@ -1,80 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grayscale Image Converter</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            color: #333;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Grayscale Image Converter</title>
 
-        .container {
-            background-color: #fff;
-            padding: 40px 60px;
-            border-radius: 8px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 100%;
-            max-width: 400px;
-        }
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
 
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #2c3e50;
-        }
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-        input[type="file"] {
-            font-size: 16px;
-            margin: 20px 0;
-            padding: 10px;
-            width: 100%;
-            border: 2px solid #3498db;
-            border-radius: 4px;
-            background-color: #ecf0f1;
-        }
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Space Grotesk', sans-serif;
+      background: #0d1117;
+      color: #eee;
+      overflow-x: hidden;
+    }
 
-        button {
-            font-size: 16px;
-            padding: 10px 20px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-        }
+    #particles-js {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
 
-        button:hover {
-            background-color: #2980b9;
-        }
+    /* Floating Banner (Improved Design) */
+    .floating-banner {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      background: rgba(0, 255, 255, 0.08);
+      border: 1px solid rgba(0, 255, 255, 0.15);
+      padding: 10px 24px;
+      border-radius: 50px;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 12px rgba(0, 255, 255, 0.05);
+      transition: top 0.3s ease-in-out;
+    }
 
-        .footer {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #95a5a6;
-        }
-    </style>
+    .floating-banner a {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      background: rgba(0, 255, 255, 0.06);
+      color: #00ffff;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .floating-banner a:hover {
+      background: rgba(0, 255, 255, 0.15);
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+      transform: scale(1.04);
+    }
+
+    /* Main Converter */
+    .converter {
+      position: relative;
+      z-index: 1;
+      max-width: 400px;
+      margin: auto;
+      padding: 40px 30px;
+      margin-top: 100px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      box-shadow: 0 0 25px rgba(0, 255, 255, 0.07);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 24px;
+      color: #00ffff;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 14px;
+      color: #aaa;
+      margin-bottom: 30px;
+    }
+
+    input[type="file"] {
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid #00ffff;
+      color: #ccc;
+      padding: 10px;
+      border-radius: 8px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    input::file-selector-button {
+      background-color: #00ffff;
+      color: #0d1117;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    input::file-selector-button:hover {
+      background-color: #00e0e0;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #00ffff;
+      color: #0d1117;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #00cccc;
+    }
+
+    .footer {
+      margin-top: 25px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .icon {
+      font-size: 28px;
+      color: #00ffff;
+      margin-bottom: 15px;
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>Grayscale Image Converter</h1>
-        <p>Upload an image to convert it into a grayscale format.</p>
-        <form action="/upload" method="post" enctype="multipart/form-data">
-            <input type="file" name="file" accept="image/*" required>
-            <button type="submit">Convert to Grayscale</button>
-        </form>
-        <div class="footer">
-            <p>Tool designed for data science enthusiasts</p>
-        </div>
+  <!-- Background Particles -->
+  <div id="particles-js"></div>
+
+  <!-- Floating Banner -->
+  <div class="floating-banner">
+    <a href="https://rahelxv.github.io/">Back</a>
+    <a href="https://github.com/Rahelxv/Simple_Linear_Regression_Job_Success_Rate_And_Earning">GitHub</a>
+  </div>
+
+  <!-- Main Grayscale Tool -->
+  <div class="converter" id="converterBox">
+    <div class="icon"><i class="fas fa-image"></i></div>
+    <h1>Grayscale Converter</h1>
+    <p>Upload an image and convert it to grayscale. Clean, fast, and futuristic.</p>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" accept="image/*" required>
+      <button type="submit">Convert</button>
+    </form>
+    <div class="footer">
+      <p>Designed for data-driven creators ✦</p>
     </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // Particle background
+    particlesJS("particles-js", {
+      particles: {
+        number: { value: 40, density: { enable: true, value_area: 800 } },
+        color: { value: "#00ffff" },
+        shape: { type: "circle" },
+        opacity: { value: 0.3 },
+        size: { value: 3 },
+        line_linked: {
+          enable: true,
+          distance: 120,
+          color: "#00ffff",
+          opacity: 0.2,
+          width: 1
+        },
+        move: { enable: true, speed: 2 }
+      },
+      interactivity: {
+        events: {
+          onhover: { enable: true, mode: "repulse" },
+          onclick: { enable: true, mode: "push" }
+        }
+      },
+      retina_detect: true
+    });
+
+    // Scroll toggle for floating banner
+    document.addEventListener("DOMContentLoaded", () => {
+      let lastScrollTop = 0;
+      const banner = document.querySelector('.floating-banner');
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        banner.style.top = scrollTop > lastScrollTop ? '-100px' : '20px';
+        lastScrollTop = Math.max(0, scrollTop);
+      });
+    });
+
+    // Animate converter entrance
+    gsap.from("#converterBox", {
+      y: 40,
+      opacity: 0,
+      duration: 1.2,
+      ease: "power2.out"
+    });
+  </script>
 </body>
 </html>
